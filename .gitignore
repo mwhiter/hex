@@ -26,3 +26,12 @@
 *.exe
 *.out
 *.app
+
+*.suo
+*.opensdf
+*.sdf
+Release
+Debug
+hex/Debug
+*.vcxproj
+*.vcxproj.filters

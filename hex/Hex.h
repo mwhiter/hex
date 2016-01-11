@@ -8,30 +8,45 @@ namespace mandr {
 	class Hex
 	{
 	public:
+
+		struct Coordinates {
+			Coordinates(int q, int r) : q(q), r(r) {}
+			int q;
+			int r;
+
+			friend Coordinates operator+(const Coordinates& a, const Coordinates& b);
+			Coordinates& operator+=(const Coordinates& other);
+		};
+
 		friend class Map;
 		friend std::ostream& operator<<(std::ostream& os, Hex h);
 
-		Hex(Map* m, int q, int r);			// Axial
+		Hex(Map* pMap, int col, int row);
 
 		~Hex();
 
-		inline int getCol() const { return q; }
-		inline int getRow() const { return r; }
-
-		static sf::Vector3i toCube(Hex& h);
-		static int cube_distance(sf::Vector3i a, sf::Vector3i b);
-		static int distance(Hex& a, Hex& b);
-
 		Hex* getAdjacent(DirectionType direction) const;
 
-		void draw(sf::RenderWindow& window);
+		// Cube coordinate accessors
+		inline int c_q() { return m_Coords.q; }
+		inline int c_r() { return m_Coords.r; }
+		inline int c_s() { return -m_Coords.q - m_Coords.r; }
+
+		inline Coordinates getCoords() const { return m_Coords; }
+		inline int getCol() const { return m_Coords.q; }
+		inline int getRow() const { return m_Coords.r; }
+
+		// Static methods
+		static sf::Vector3i even_r_to_cube(const Coordinates& c);
+		static sf::Vector3i even_r_to_cube(int q, int r);
+		static Coordinates cube_to_even_r(int x, int y, int z);
+		static int distance(const Hex& a, const Hex& b);
+
 	private:
-		Map* pMap;
+		static int cube_distance(sf::Vector3i a, sf::Vector3i b);
 
-		int q, r;		// axial
-
-		float size;
-		float width, height;
+		Map* m_pMap;
+		Coordinates m_Coords; // offset coordinates
 	};
 }
 
