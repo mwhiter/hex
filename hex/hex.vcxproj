@@ -91,6 +91,7 @@
     <ClCompile Include="Point.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="enums.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="PCH.h" />
     <ClInclude Include="Hex.h" />

@@ -2,7 +2,7 @@
 #include "PCH.h"
 
 namespace mandr {
-	Hex::Hex(int q, int r) : q(q), r(r) { }
+	Hex::Hex(Map* m, int q, int r) : pMap(m), q(q), r(r) { }
 
 	Hex::~Hex() {
 
@@ -24,6 +24,21 @@ namespace mandr {
 		sf::Vector3i ac = toCube(a);
 		sf::Vector3i bc = toCube(b);
 		return cube_distance(ac, bc);
+	}
+
+	// Get tile adjacent in any direction
+	Hex* Hex::getAdjacent(DirectionType direction) const {
+		int offset_q, offset_r;
+		switch (direction) {
+			case DIRECTION_NORTHEAST:	offset_q = 1, offset_r = -1; break;
+			case DIRECTION_EAST:		offset_q = 1, offset_r = 0; break;
+			case DIRECTION_SOUTHEAST:	offset_q = 0, offset_r = 1; break;
+			case DIRECTION_SOUTHWEST:	offset_q = -1, offset_r = 1; break;
+			case DIRECTION_WEST:		offset_q = -1, offset_r = 0; break;
+			case DIRECTION_NORTHWEST:	offset_q = 0, offset_r = -1; break;
+			default: return NULL;
+		}
+		return pMap->getHex(q + offset_q, r + offset_r);
 	}
 
 	void Hex::draw(sf::RenderWindow& window) {

@@ -5,6 +5,8 @@
 #include <cmath>
 #include <math.h>
 
+#include "enums.h"
+
 #include "Point.h"
 #include "Hex.h"
 #include "Map.h"

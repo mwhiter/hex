@@ -1,0 +1,16 @@
+#pragma once
+
+namespace mandr {
+
+	enum DirectionType {
+		DIRECTION_NORTHEAST = 0,
+		DIRECTION_EAST,
+		DIRECTION_SOUTHEAST,
+		DIRECTION_SOUTHWEST,
+		DIRECTION_WEST,
+		DIRECTION_NORTHWEST,
+
+		NUM_DIRECTIONS
+	};
+
+}

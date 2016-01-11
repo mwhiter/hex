@@ -3,6 +3,7 @@
 #include "Hex.h"
 
 namespace mandr {
+	typedef std::pair<int, int> hex_coord;
 
 	class Map
 	{
@@ -10,9 +11,9 @@ namespace mandr {
 		Map(int width, int height);
 		~Map();
 
-		Hex* getHex(int r, int q);
+		Hex* getHex(int q, int r);
 	private:
-		std::vector<std::vector<Hex*>> grid;
+		std::map<hex_coord, Hex*> grid;
 		int width;
 		int height;
 	};
