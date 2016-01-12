@@ -2,7 +2,7 @@
 #include "PCH.h"
 
 namespace mandr {
-	Hex::Hex(Map* pMap, int col, int row) : m_pMap(pMap), m_Coords(col, row) { }
+	Hex::Hex(HexMap* pMap, int col, int row) : m_pMap(pMap), m_Coords(col, row) { }
 
 	Hex::~Hex() { }
 
@@ -25,6 +25,26 @@ namespace mandr {
 		return Coordinates(q,r);
 	}
 
+	Hex::Coordinates Hex::cube_round(double x, double y, double z)
+	{
+		double rx = round(x);
+		double ry = round(y);
+		double rz = round(z);
+
+		double xd = abs(rx - x);	// xd = x difference
+		double yd = abs(ry - y);
+		double zd = abs(rz - z);
+
+		if (xd > yd && xd > zd)
+			rx = -ry - rz;
+		else if (yd > zd)
+			ry = -rx - rz;
+		else
+			rz = -rx - ry;
+
+		return Hex::Coordinates(cube_to_even_r(rx,ry,rz));
+	}
+
 	int Hex::cube_distance(const sf::Vector3i a, const sf::Vector3i b) {
 		return std::max(std::abs(a.x - b.x), std::max(std::abs(a.y - b.y), std::abs(a.z - b.z)));
 	}
@@ -33,6 +53,27 @@ namespace mandr {
 		sf::Vector3i ac = even_r_to_cube(a.m_Coords.q, a.m_Coords.r);
 		sf::Vector3i bc = even_r_to_cube(b.m_Coords.q, b.m_Coords.r);
 		return cube_distance(ac, bc);
+	}
+
+	void Hex::draw(const HexMapLayout& layout, sf::Window& window) const {
+	}
+
+	sf::Vector2i Hex::hex_to_pixel(const HexMapLayout & layout) {
+		const HexMapOrientation& o = layout.o;
+		int q = m_Coords.q, r = m_Coords.r;
+		double x = (o.f0 * q + o.f1 * r) * layout.size.x;
+		double y = (o.f2 * q + o.f3 * r) * layout.size.y;
+		return sf::Vector2i(x + layout.origin.x, y + layout.origin.y);
+	}
+
+	Hex::Coordinates Hex::pixel_to_hex(const HexMapLayout & layout, sf::Vector2i & p)
+	{
+		const HexMapOrientation& o = layout.o;
+		sf::Vector2f pt = sf::Vector2f((p.x - layout.origin.x) / layout.size.x,
+									   (p.y - layout.origin.y) / layout.size.y);
+		double q = o.b0 * pt.x + o.b1 * p.y;
+		double r = o.b2 * pt.x + o.b3 * p.y;
+		return Hex::Coordinates(cube_round(q, r, -q-r));	// convert cubic to even_r offset coords
 	}
 
 	// Get tile adjacent in any direction

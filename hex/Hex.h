@@ -1,10 +1,12 @@
 #pragma once
 
-#include "Point.h"
 #include <SFML/Graphics.hpp>
 #include "enums.h"
 
 namespace mandr {
+	// Forward declarations
+	struct HexMapLayout;
+
 	class Hex
 	{
 	public:
@@ -18,10 +20,10 @@ namespace mandr {
 			Coordinates& operator+=(const Coordinates& other);
 		};
 
-		friend class Map;
+		friend class HexMap;
 		friend std::ostream& operator<<(std::ostream& os, Hex h);
 
-		Hex(Map* pMap, int col, int row);
+		Hex(HexMap* pMap, int col, int row);
 
 		~Hex();
 
@@ -42,10 +44,15 @@ namespace mandr {
 		static Coordinates cube_to_even_r(int x, int y, int z);
 		static int distance(const Hex& a, const Hex& b);
 
+		void draw(const HexMapLayout& layout, sf::Window& window) const;
 	private:
+		sf::Vector2i hex_to_pixel(const HexMapLayout& layout);
+		Hex::Coordinates pixel_to_hex(const HexMapLayout& layout, sf::Vector2i& p);
+
+		static Hex::Coordinates cube_round(double x, double y, double z);
 		static int cube_distance(sf::Vector3i a, sf::Vector3i b);
 
-		Map* m_pMap;
+		HexMap* m_pMap;
 		Coordinates m_Coords; // offset coordinates
 	};
 }

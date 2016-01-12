@@ -35,3 +35,4 @@ Debug
 hex/Debug
 *.vcxproj
 *.vcxproj.filters
+*.VC.opendb
