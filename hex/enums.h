@@ -3,6 +3,8 @@
 namespace mandr {
 
 	enum DirectionType {
+		NO_DIRECTION = -1,
+
 		DIRECTION_NORTHEAST = 0,
 		DIRECTION_EAST,
 		DIRECTION_SOUTHEAST,

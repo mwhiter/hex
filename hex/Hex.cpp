@@ -2,38 +2,30 @@
 #include "PCH.h"
 
 namespace mandr {
-	Hex::Hex(HexMap* pMap, int col, int row) : m_pMap(pMap), m_Coords(col, row) { }
 
-	Hex::~Hex() { }
+	const Hex Hex::neighbors[NUM_DIRECTIONS] = {
+		Hex(1, 0, -1),	// NE
+		Hex(1, -1, 0),	// E
+		Hex(1, -1, 0),	// SE
+		Hex(0, -1, 1),	// SW
+		Hex(-1, 1, 0),	// W
+		Hex(1, 0, -1),	// NW
+	};
 
-	sf::Vector3i Hex::even_r_to_cube(int q, int r) {
-		int x = q - (r + (r & 1)) / 2;
-		int z = r;
-		int y = -x - z;
-		
-		return sf::Vector3i(x, y, z);
+	sf::Vector2i Hex::cube_to_even_r(const Hex & a) {
+		int q = a.q + (a.s + (a.s & 1)) / 2;
+		int r = a.s;
+		return sf::Vector2i(q, r);
 	}
 
+	Hex Hex::round(float x, float y, float z) {
+		float rx = std::round(x);
+		float ry = std::round(y);
+		float rz = std::round(z);
 
-	sf::Vector3i Hex::even_r_to_cube(const Coordinates& c) {
-		return even_r_to_cube(c.q, c.r);
-	}
-
-	Hex::Coordinates Hex::cube_to_even_r(int x, int y, int z) {
-		int q = x + (z + (z & 1)) / 2;
-		int r = z;
-		return Coordinates(q,r);
-	}
-
-	Hex::Coordinates Hex::cube_round(double x, double y, double z)
-	{
-		double rx = round(x);
-		double ry = round(y);
-		double rz = round(z);
-
-		double xd = abs(rx - x);	// xd = x difference
-		double yd = abs(ry - y);
-		double zd = abs(rz - z);
+		float xd = abs(rx - x);
+		float yd = abs(ry - y);
+		float zd = abs(rz - z);
 
 		if (xd > yd && xd > zd)
 			rx = -ry - rz;
@@ -41,79 +33,123 @@ namespace mandr {
 			ry = -rx - rz;
 		else
 			rz = -rx - ry;
-
-		return Hex::Coordinates(cube_to_even_r(rx,ry,rz));
+		
+		return Hex((int)rx, (int)ry, (int)rz);
 	}
 
-	int Hex::cube_distance(const sf::Vector3i a, const sf::Vector3i b) {
-		return std::max(std::abs(a.x - b.x), std::max(std::abs(a.y - b.y), std::abs(a.z - b.z)));
+	void Hex::draw(const HexMapLayout& layout, sf::RenderWindow& window) const {
+		std::vector<sf::Vector2f> corners = polygon_corners(layout);
+
+		sf::VertexArray lines(sf::LinesStrip, 7);
+		for (int i = 0; i < 7; i++) {
+			lines[i] = corners[i % 6];
+		}
+		window.draw(lines);
 	}
 
-	int Hex::distance(const Hex& a, const Hex& b) {
-		sf::Vector3i ac = even_r_to_cube(a.m_Coords.q, a.m_Coords.r);
-		sf::Vector3i bc = even_r_to_cube(b.m_Coords.q, b.m_Coords.r);
-		return cube_distance(ac, bc);
+	sf::Vector2f Hex::hex_to_pixel(const Hex& h, const HexMapLayout & layout) {
+		const HexMapOrientation& o = layout.orientation;
+		double x = (o.f0 * h.q + o.f1 * h.r) * layout.size.x;
+		double y = (o.f2 * h.q + o.f3 * h.r) * layout.size.y;
+		return sf::Vector2f((float) x + layout.origin.x, (float) y + layout.origin.y);
 	}
 
-	void Hex::draw(const HexMapLayout& layout, sf::Window& window) const {
-	}
-
-	sf::Vector2i Hex::hex_to_pixel(const HexMapLayout & layout) {
-		const HexMapOrientation& o = layout.o;
-		int q = m_Coords.q, r = m_Coords.r;
-		double x = (o.f0 * q + o.f1 * r) * layout.size.x;
-		double y = (o.f2 * q + o.f3 * r) * layout.size.y;
-		return sf::Vector2i(x + layout.origin.x, y + layout.origin.y);
-	}
-
-	Hex::Coordinates Hex::pixel_to_hex(const HexMapLayout & layout, sf::Vector2i & p)
+	Hex Hex::pixel_to_hex(const HexMapLayout & layout, sf::Vector2i & p)
 	{
-		const HexMapOrientation& o = layout.o;
+		const HexMapOrientation& o = layout.orientation;
 		sf::Vector2f pt = sf::Vector2f((p.x - layout.origin.x) / layout.size.x,
 									   (p.y - layout.origin.y) / layout.size.y);
 		double q = o.b0 * pt.x + o.b1 * p.y;
 		double r = o.b2 * pt.x + o.b3 * p.y;
-		return Hex::Coordinates(cube_round(q, r, -q-r));	// convert cubic to even_r offset coords
+		return round(q, r, -q - r);
 	}
 
 	// Get tile adjacent in any direction
-	Hex* Hex::getAdjacent(DirectionType direction) const {
-		int offset_q, offset_r;
-		switch (direction) {
-			case DIRECTION_NORTHEAST:	offset_q = 1, offset_r = -1; break;
-			case DIRECTION_EAST:		offset_q = 1, offset_r = 0; break;
-			case DIRECTION_SOUTHEAST:	offset_q = 0, offset_r = 1; break;
-			case DIRECTION_SOUTHWEST:	offset_q = -1, offset_r = 1; break;
-			case DIRECTION_WEST:		offset_q = -1, offset_r = 0; break;
-			case DIRECTION_NORTHWEST:	offset_q = 0, offset_r = -1; break;
-			default: return NULL;
-		}
-		return m_pMap->getHex(m_Coords.q + offset_q, m_Coords.r + offset_r);
+	Hex Hex::getAdjacent(const Hex& h, DirectionType direction) const {
+		assert(direction > NO_DIRECTION && direction < NUM_DIRECTIONS);
+		return h + neighbors[direction];
 	}
 
 	std::ostream& operator<<(std::ostream& os, Hex h) {
-		os << "{ " << h.m_Coords.q << ", " << h.m_Coords.r << "}";
+		os << "{ " << h.q << ", " << h.r << "}";
 		return os;
 	}
 
-	Hex::Coordinates operator+(const Hex::Coordinates& a, const Hex::Coordinates& b) {
-		Hex::Coordinates c = a;
+	bool operator==(const Hex& a, const Hex& b) {
+		return a.q == b.q && a.r == b.r && a.s == b.s;
+	}
+
+	Hex operator+(const Hex & a, const Hex & b)
+	{
+		Hex c = a;
 		c += b;
 		return c;
 	}
 
-	Hex::Coordinates& Hex::Coordinates::operator+=(const Hex::Coordinates& other) {
-		// Convert to cube
-		sf::Vector3i c_a = Hex::even_r_to_cube(*this);
-		sf::Vector3i c_b = Hex::even_r_to_cube(other);
-
-		// Perform addition, then convert back to offset
-		Coordinates c = cube_to_even_r(c_a.x + c_b.x, c_a.y + c_b.y, c_a.z + c_b.z);
-
-		// Update the coordinates
-		q = c.q;
-		r = c.r;
+	Hex& Hex::operator+=(const Hex& other) {
+		q += other.q;
+		r += other.r;
+		s += other.s;
+		
+		assert(q + r + s == 0);
 
 		return *this;
+	}
+
+	Hex operator-(const Hex& a, const Hex& b) {
+		Hex c = a;
+		c -= b;
+		return a;
+	}
+
+	Hex& Hex::operator-=(const Hex& other) {
+		q -= other.q;
+		r -= other.r;
+		s -= other.s;
+
+		assert(q + r + s == 0);
+
+		return *this;
+	}
+
+	Hex operator*(const Hex& a, int k) {
+		Hex b = a;
+		b *= k;
+		return b;
+	}
+
+	Hex& Hex::operator*=(int k) {
+		q *= k;
+		r *= k;
+		s *= k;
+		
+		assert(q + r + s == 0);
+
+		return *this;
+	}
+
+	int Hex::length(const Hex& a) {
+		return int((abs(a.q) + abs(a.r) + abs(a.s)) / 2);
+	}
+
+	int Hex::distance(const Hex & a, const Hex & b)
+	{
+		return length(a - b);
+	}
+
+	sf::Vector2f Hex::corner_offset(const HexMapLayout& layout, int corner) const {
+		sf::Vector2f size = layout.size;
+		double angle = 2.0 * M_PI * (corner + layout.orientation.start_angle) / 6;
+		return sf::Vector2f(size.x * cos(angle), size.y * sin(angle));
+	}
+
+	std::vector<sf::Vector2f> Hex::polygon_corners(const HexMapLayout& layout) const {
+		std::vector<sf::Vector2f> corners = {};
+		sf::Vector2f center = hex_to_pixel(*this, layout);
+		for (int i = 0; i < 6; i++) {
+			sf::Vector2f offset = corner_offset(layout, i);
+			corners.push_back(sf::Vector2f(center.x + offset.x, center.y + offset.y));
+		}
+		return corners;
 	}
 }

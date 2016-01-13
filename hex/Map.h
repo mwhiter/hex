@@ -1,10 +1,10 @@
 #pragma once
 
 #include "Hex.h"
+#include "Tile.h"
+#include <unordered_map>
 
 namespace mandr {
-	typedef std::pair<int, int> hex_coord;
-
 	struct HexMapOrientation {
 		const double f0, f1, f2, f3;	// 2x2 forward matrix
 		const double b0, b1, b2, b3;	// 2x2 inverse matrix
@@ -19,11 +19,11 @@ namespace mandr {
 	};
 
 	struct HexMapLayout {
-		const HexMapOrientation o;
+		const HexMapOrientation orientation;
 		const sf::Vector2f size;
 		const sf::Vector2f origin;
-		HexMapLayout(HexMapOrientation o, sf::Vector2f size, sf::Vector2f origin) :
-			o(o), size(size), origin(origin) {}
+		HexMapLayout(HexMapOrientation orientation, sf::Vector2f size, sf::Vector2f origin) :
+			orientation(orientation), size(size), origin(origin) {}
 	};
 
 	class HexMap
@@ -39,15 +39,16 @@ namespace mandr {
 		inline int getWidth() const { return m_Width; }
 		inline int getHeight() const { return m_Height; }
 
-		std::vector<Hex*> getHexesInRange(Hex::Coordinates& coords, int range) const;
-		std::vector<Hex*> getHexesInRange(Hex& hex, int range) const;
+		std::vector<Tile*> getTilesInRange(Hex& hex, int range) const;
 
-		void draw(sf::Window& window) const;
+		void draw(sf::RenderWindow& window) const;
 
-		Hex* getHex(int q, int r) const;
-		Hex* getHex(Hex::Coordinates& c) const;
+		Tile* getTile(int q, int r, int s) const;
+		Tile* getTile(Hex& h) const;
+
+		const HexMapLayout getLayout() const;
 	private:
-		std::map<hex_coord, Hex*> m_Grid;
+		std::unordered_map<Hex, Tile*> m_Grid;
 		const HexMapLayout m_Layout;
 		int m_Width;
 		int m_Height;

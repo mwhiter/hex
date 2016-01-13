@@ -2,60 +2,68 @@
 
 #include <SFML/Graphics.hpp>
 #include "enums.h"
+#include <cassert>
+#include <cmath>
+
 
 namespace mandr {
 	// Forward declarations
 	struct HexMapLayout;
 
-	class Hex
+	struct Hex
 	{
-	public:
-
-		struct Coordinates {
-			Coordinates(int q, int r) : q(q), r(r) {}
-			int q;
-			int r;
-
-			friend Coordinates operator+(const Coordinates& a, const Coordinates& b);
-			Coordinates& operator+=(const Coordinates& other);
-		};
+		int q;
+		int r;
+		int s;
 
 		friend class HexMap;
 		friend std::ostream& operator<<(std::ostream& os, Hex h);
 
-		Hex(HexMap* pMap, int col, int row);
+		static const Hex neighbors[NUM_DIRECTIONS];
 
-		~Hex();
+		Hex(int q, int r) : q(q), r(r), s(-q-r) {
+			assert(q + r + s == 0);
+		};
 
-		Hex* getAdjacent(DirectionType direction) const;
+		Hex(int q, int r, int s) : q(q), r(r), s(s) {
+			assert(q + r + s == 0);
+		};
 
-		// Cube coordinate accessors
-		inline int c_q() { return m_Coords.q; }
-		inline int c_r() { return m_Coords.r; }
-		inline int c_s() { return -m_Coords.q - m_Coords.r; }
+		friend bool operator==(const Hex& a, const Hex& b);
+		friend Hex operator+(const Hex& a, const Hex& b);
+		Hex& operator+=(const Hex& other);
+		friend Hex operator-(const Hex& a, const Hex& b);
+		Hex& operator-=(const Hex& other);
+		friend Hex operator*(const Hex& a, int k);
+		Hex& operator*=(int k);
 
-		inline Coordinates getCoords() const { return m_Coords; }
-		inline int getCol() const { return m_Coords.q; }
-		inline int getRow() const { return m_Coords.r; }
-
-		// Static methods
-		static sf::Vector3i even_r_to_cube(const Coordinates& c);
-		static sf::Vector3i even_r_to_cube(int q, int r);
-		static Coordinates cube_to_even_r(int x, int y, int z);
+		static int length(const Hex& a);
 		static int distance(const Hex& a, const Hex& b);
 
-		void draw(const HexMapLayout& layout, sf::Window& window) const;
-	private:
-		sf::Vector2i hex_to_pixel(const HexMapLayout& layout);
-		Hex::Coordinates pixel_to_hex(const HexMapLayout& layout, sf::Vector2i& p);
+		Hex getAdjacent(const Hex& h, DirectionType direction) const;
 
-		static Hex::Coordinates cube_round(double x, double y, double z);
-		static int cube_distance(sf::Vector3i a, sf::Vector3i b);
+		// Static methods
+		static sf::Vector2i cube_to_even_r(const Hex& a);
+		static Hex round(float x, float y, float z);
 
-		HexMap* m_pMap;
-		Coordinates m_Coords; // offset coordinates
+		void draw(const HexMapLayout& layout, sf::RenderWindow& window) const;
+
+		static sf::Vector2f hex_to_pixel(const Hex& h, const HexMapLayout& layout);
+		static Hex pixel_to_hex(const HexMapLayout& layout, sf::Vector2i& p);
+
+		sf::Vector2f corner_offset(const HexMapLayout& layout, int corner) const;
+		std::vector<sf::Vector2f> polygon_corners(const HexMapLayout& layout) const;
 	};
 }
 
+// Hash for Hex - because unordered map does not come default with one
+template <> struct std::hash<mandr::Hex> {
+	size_t operator()(const mandr::Hex& h) const {
+		std::hash<int> int_hash;
+		size_t hq = int_hash(h.q);
+		size_t hr = int_hash(h.r);
+		return hq ^ (hr + 0x9e3779b9 + (hq << 6) + (hq >> 2));
+	}
+};
 
 

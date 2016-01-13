@@ -4,6 +4,8 @@
 #include <iostream>
 #include <cmath>
 #include <math.h>
+#include <assert.h>
+#include <unordered_map>
 
 #include "enums.h"
 
