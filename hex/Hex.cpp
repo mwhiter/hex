@@ -12,6 +12,11 @@ namespace mandr {
 		Hex(1, 0, -1),	// NW
 	};
 
+	Hex Hex::even_r_to_cube(const sf::Vector2i& v)
+	{
+		return Hex(v.x - (v.y + (v.x & 1)) / 2, v.y);
+	}
+
 	sf::Vector2i Hex::cube_to_even_r(const Hex & a) {
 		int q = a.q + (a.s + (a.s & 1)) / 2;
 		int r = a.s;
@@ -71,7 +76,7 @@ namespace mandr {
 	}
 
 	std::ostream& operator<<(std::ostream& os, Hex h) {
-		os << "{ " << h.q << ", " << h.r << "}";
+		os << "{ " << h.q << ", " << h.r << ", " << h.s << "}";
 		return os;
 	}
 

@@ -43,6 +43,7 @@ namespace mandr {
 		Hex getAdjacent(const Hex& h, DirectionType direction) const;
 
 		// Static methods
+		static Hex even_r_to_cube(const sf::Vector2i& v);
 		static sf::Vector2i cube_to_even_r(const Hex& a);
 		static Hex round(float x, float y, float z);
 
