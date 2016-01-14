@@ -54,6 +54,9 @@ namespace mandr {
 
 		const HexMapLayout getLayout() const;
 	private:
+		// Graphics information for the map
+		sf::VertexArray m_Vertices;
+
 		std::unordered_map<Hex, Tile*> m_Grid;
 		const HexMapLayout m_Layout;
 		int m_Width;

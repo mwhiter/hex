@@ -36,7 +36,7 @@ namespace mandr {
 		m_pWindow(new sf::RenderWindow(sf::VideoMode(1600, 900), "Hex Test", sf::Style::Close)),
 		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(24, 24), sf::Vector2f(0, 0)))
 	{
-		m_pMap = new HexMap(m_MapLayout, 24, 24);
+		m_pMap = new HexMap(m_MapLayout, 128, 128);
 
 		m_pRenderer = new Renderer();
 		m_pRenderer->SetRenderCallbackFunc(draw_wrapper);
