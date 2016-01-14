@@ -23,7 +23,7 @@ namespace mandr {
 				m_Grid.insert(std::pair<Hex, Tile*>(hex, new Tile(even_r.x, even_r.y)));
 
 				// Load graphical information for hex
-				sf::Vertex* hex_verts = &m_Vertices[(even_r.y + even_r.x * m_Width) * 12];
+				sf::Vertex* hex_verts = &m_Vertices[(even_r.x + even_r.y * m_Width) * 12];
 				std::vector<sf::Vector2f> corners = hex.polygon_corners(m_Layout);
 
 				hex_verts[0].position = corners[0];
