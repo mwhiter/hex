@@ -58,6 +58,10 @@ namespace mandr {
 					m_LastMousePosition.x = event.mouseMove.x;
 					m_LastMousePosition.y = event.mouseMove.y;
 					break;
+				case sf::Event::MouseWheelScrolled:
+					if (mouse_wheel_scroll_callback_func != NULL)
+						mouse_wheel_scroll_callback_func(event.mouseWheelScroll);
+					break;
 				case sf::Event::MouseButtonPressed:
 					if (mouse_button_pressed_callback_func != NULL)
 						mouse_button_pressed_callback_func(event.mouseButton);
@@ -83,6 +87,10 @@ namespace mandr {
 
 	void InputHandler::setMouseMovedCallbackFunc(void(*callback)(sf::Event::MouseMoveEvent)) {
 		mouse_moved_callback_func = callback;
+	}
+
+	void InputHandler::setMouseWheelScrollCallbackFunc(void(*callback)(sf::Event::MouseWheelScrollEvent)) {
+		mouse_wheel_scroll_callback_func = callback;
 	}
 
 	void InputHandler::setMouseButtonPressedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent)) {

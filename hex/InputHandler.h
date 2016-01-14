@@ -20,6 +20,7 @@ namespace mandr {
 
 		// Mouse Events
 		void setMouseMovedCallbackFunc(void(*callback)(sf::Event::MouseMoveEvent));
+		void setMouseWheelScrollCallbackFunc(void(*callback)(sf::Event::MouseWheelScrollEvent));
 		void setMouseButtonPressedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent));
 		void setMouseButtonReleasedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent));
 
@@ -34,6 +35,7 @@ namespace mandr {
 		void (*key_press_callback_func)(sf::Event::KeyEvent);
 		void (*key_release_callback_func)(sf::Event::KeyEvent);
 		void (*mouse_moved_callback_func)(sf::Event::MouseMoveEvent);
+		void (*mouse_wheel_scroll_callback_func)(sf::Event::MouseWheelScrollEvent);
 		void (*mouse_button_pressed_callback_func)(sf::Event::MouseButtonEvent);
 		void (*mouse_button_released_callback_func)(sf::Event::MouseButtonEvent);
 	};

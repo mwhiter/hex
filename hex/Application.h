@@ -36,9 +36,10 @@ namespace mandr {
 
 		void keyPressed(sf::Event::KeyEvent key);
 		void keyReleased(sf::Event::KeyEvent key);
-		void mouseMoved(sf::Event::MouseMoveEvent key);
-		void mousePressed(sf::Event::MouseButtonEvent key);
-		void mouseReleased(sf::Event::MouseButtonEvent key);
+		void mouseMoved(sf::Event::MouseMoveEvent mouse);
+		void mouseWheelScrolled(sf::Event::MouseWheelScrollEvent mouseScroll);
+		void mousePressed(sf::Event::MouseButtonEvent mouseButton);
+		void mouseReleased(sf::Event::MouseButtonEvent mouseButton);
 	};
 
 }

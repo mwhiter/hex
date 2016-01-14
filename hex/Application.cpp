@@ -22,6 +22,10 @@ void mouse_released_wrapper(sf::Event::MouseButtonEvent mouseButton) {
 	mandr::Application::getInstance()->mouseReleased(mouseButton);
 }
 
+void mouse_wheel_scroll_wrapper(sf::Event::MouseWheelScrollEvent mouseScroll) {
+	mandr::Application::getInstance()->mouseWheelScrolled(mouseScroll);
+}
+
 void draw_wrapper(sf::RenderWindow& window) {
 	mandr::Application::getInstance()->draw(window);
 }
@@ -45,6 +49,7 @@ namespace mandr {
 		m_pInput->setKeyPressedCallbackFunc(key_pressed_wrapper);
 		m_pInput->setKeyReleasedCallbackFunc(key_released_wrapper);
 		m_pInput->setMouseMovedCallbackFunc(mouse_moved_wrapper);
+		m_pInput->setMouseWheelScrollCallbackFunc(mouse_wheel_scroll_wrapper);
 		m_pInput->setMouseButtonPressedCallbackFunc(mouse_pressed_wrapper);
 		m_pInput->setMouseButtonReleasedCallbackFunc(mouse_released_wrapper);
 	}
@@ -94,18 +99,21 @@ namespace mandr {
 		// Get the amount we've dragged
 		sf::Vector2i mouseDragOffset = m_pInput->getMouseDraggedOffset();
 		m_pRenderer->getView().move(-mouseDragOffset.x * dragSpeed, -mouseDragOffset.y * dragSpeed);
+	}
 
+	void Application::mouseWheelScrolled(sf::Event::MouseWheelScrollEvent mouseScroll) {
+		sf::View* view = &m_pRenderer->getView();
+		view->zoom(mouseScroll.delta > 0 ? 0.9f : 1.1f);
+	}
+
+	void Application::mousePressed(sf::Event::MouseButtonEvent button) {
 		// Convert mouse pixel position to world coords
 		sf::Vector2f worldPos = m_pWindow->mapPixelToCoords(sf::Mouse::getPosition(*m_pWindow));
-
 		// Use new world coords for selecting a tile we're hovering over
 		Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), sf::Vector2i(worldPos.x, worldPos.y));
 		Tile* pTile = m_pMap->getTile(hover);
 		if (pTile)
 			std::cout << pTile->getX() << " " << pTile->getY() << std::endl;
-	}
-
-	void Application::mousePressed(sf::Event::MouseButtonEvent button) {
 	}
 
 	void Application::mouseReleased(sf::Event::MouseButtonEvent button) {
