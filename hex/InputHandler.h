@@ -7,24 +7,22 @@ namespace mandr {
 	class InputHandler
 	{
 	public:
-		InputHandler(sf::Window* pWindow);
+		InputHandler();
 		~InputHandler();
 		InputHandler(const InputHandler& other);
 		InputHandler& operator=(const InputHandler& other);
 
-		void processEvents();
+		void processEvents(sf::Window& window);
 
 		// Keyboard Events
 		void setKeyPressedCallbackFunc(void(*callback)(sf::Event::KeyEvent));
 		void setKeyReleasedCallbackFunc(void(*callback)(sf::Event::KeyEvent));
 
 		// Mouse Events
-		void setMouseMovedCallback(void(*callback)(sf::Event::MouseMoveEvent));
-		void setMouseButtonPressedCallback(void(*callback)(sf::Event::MouseButtonEvent));
-		void setMouseButtonReleasedCallback(void(*callback)(sf::Event::MouseButtonEvent));
+		void setMouseMovedCallbackFunc(void(*callback)(sf::Event::MouseMoveEvent));
+		void setMouseButtonPressedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent));
+		void setMouseButtonReleasedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent));
 	private:
-		sf::Window* m_pWindow;
-
 		// Event callbacks (so a user could define their own input functions instead of me defining them)
 		void (*key_press_callback_func)(sf::Event::KeyEvent);
 		void (*key_release_callback_func)(sf::Event::KeyEvent);

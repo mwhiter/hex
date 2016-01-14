@@ -16,7 +16,7 @@ namespace mandr {
 	{
 		// Initialize the hex map with axial coordinates
 		for (int row = 0; row < height; row++) {
-			int r_offset = (int)floor(row / 2);
+			int r_offset = row >> 1;
 			for (int col = -r_offset; col < width - r_offset; col++) {
 				Hex hex(col, row);
 				sf::Vector2i even_r = Hex::cube_to_even_r(hex);

@@ -3,6 +3,7 @@
 #include <iostream>
 #include "Map.h"
 #include "InputHandler.h"
+#include "Renderer.h"
 #include <SFML/Graphics.hpp>
 
 namespace mandr {
@@ -15,14 +16,14 @@ namespace mandr {
 	private:
 		HexMapLayout m_MapLayout;
 		HexMap* m_pMap;
-		InputHandler* m_pInput;
 		sf::RenderWindow* m_pWindow;
+		
+		InputHandler* m_pInput;
+		Renderer* m_pRenderer;
 
 		Application();
 		Application(const Application& other);
 		Application& operator=(const Application& other) {};
-
-		void draw();
 
 		static Application* m_pInstance;
 	public:
@@ -30,6 +31,8 @@ namespace mandr {
 		static Application* getInstance();
 
 		void loop();
+
+		void draw(sf::RenderWindow& window);
 
 		void keyPressed(sf::Event::KeyEvent key);
 		void keyReleased(sf::Event::KeyEvent key);

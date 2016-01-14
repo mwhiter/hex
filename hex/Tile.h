@@ -10,9 +10,12 @@ namespace mandr {
 		Tile(int x, int y);
 		~Tile();
 
+		int getX() const;
+		int getY() const;
+
 		Hex getHex() const;
 	private:
-		int x, y;	// even_r coordinates on hex grid
+		int m_X, m_Y;	// even_r coordinates on hex grid
 	};
 
 }

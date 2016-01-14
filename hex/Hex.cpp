@@ -18,8 +18,8 @@ namespace mandr {
 	}
 
 	sf::Vector2i Hex::cube_to_even_r(const Hex & a) {
-		int q = a.q + (a.s + (a.s & 1)) / 2;
-		int r = a.s;
+		int q = a.q + (a.r + (a.r & 1)) / 2;
+		int r = a.r;
 		return sf::Vector2i(q, r);
 	}
 
@@ -64,8 +64,8 @@ namespace mandr {
 		const HexMapOrientation& o = layout.orientation;
 		sf::Vector2f pt = sf::Vector2f((p.x - layout.origin.x) / layout.size.x,
 									   (p.y - layout.origin.y) / layout.size.y);
-		double q = o.b0 * pt.x + o.b1 * p.y;
-		double r = o.b2 * pt.x + o.b3 * p.y;
+		double q = o.b0 * pt.x + o.b1 * pt.y;
+		double r = o.b2 * pt.x + o.b3 * pt.y;
 		return round(q, r, -q - r);
 	}
 

@@ -2,8 +2,7 @@
 
 namespace mandr {
 
-	InputHandler::InputHandler(sf::Window* pWindow) :
-		m_pWindow(pWindow),
+	InputHandler::InputHandler() :
 		key_press_callback_func(NULL),
 		key_release_callback_func(NULL),
 		mouse_moved_callback_func(NULL),
@@ -18,7 +17,6 @@ namespace mandr {
 
 
 	InputHandler::InputHandler(const InputHandler& other) :
-		m_pWindow(other.m_pWindow),
 		key_press_callback_func(other.key_press_callback_func),
 		key_release_callback_func(other.key_release_callback_func),
 		mouse_moved_callback_func(other.mouse_moved_callback_func),
@@ -28,7 +26,6 @@ namespace mandr {
 	}
 
 	InputHandler& InputHandler::operator=(const InputHandler& other) {
-		m_pWindow = other.m_pWindow;
 		key_press_callback_func = other.key_press_callback_func;
 		key_release_callback_func = other.key_release_callback_func;
 		mouse_moved_callback_func = other.mouse_moved_callback_func;
@@ -37,9 +34,9 @@ namespace mandr {
 		return *this;
 	}
 
-	void InputHandler::processEvents() {
+	void InputHandler::processEvents(sf::Window& window) {
 		sf::Event event;
-		while (m_pWindow->pollEvent(event)) {
+		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::KeyPressed:
 					if (key_press_callback_func != NULL)
@@ -62,7 +59,7 @@ namespace mandr {
 						mouse_button_released_callback_func(event.mouseButton);
 					break;
 				case sf::Event::Closed:
-					m_pWindow->close();
+					window.close();
 					break;
 			}
 		}
@@ -76,15 +73,15 @@ namespace mandr {
 		key_release_callback_func = callback;
 	}
 
-	void InputHandler::setMouseMovedCallback(void(*callback)(sf::Event::MouseMoveEvent)) {
+	void InputHandler::setMouseMovedCallbackFunc(void(*callback)(sf::Event::MouseMoveEvent)) {
 		mouse_moved_callback_func = callback;
 	}
 
-	void InputHandler::setMouseButtonPressedCallback(void(*callback)(sf::Event::MouseButtonEvent)) {
+	void InputHandler::setMouseButtonPressedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent)) {
 		mouse_button_pressed_callback_func = callback;
 	}
 
-	void InputHandler::setMouseButtonReleasedCallback(void(*callback)(sf::Event::MouseButtonEvent)) {
+	void InputHandler::setMouseButtonReleasedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent)) {
 		mouse_button_released_callback_func = callback;
 	}
 
