@@ -22,7 +22,14 @@ namespace mandr {
 		void setMouseMovedCallbackFunc(void(*callback)(sf::Event::MouseMoveEvent));
 		void setMouseButtonPressedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent));
 		void setMouseButtonReleasedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent));
+
+		sf::Vector2i getMouseDraggedOffset() const;
+		bool IsMouseBeingDragged() const;
 	private:
+		bool m_MouseBeingDragged;
+		sf::Vector2i m_LastMousePosition;
+		sf::Vector2i m_NewMousePosition;
+
 		// Event callbacks (so a user could define their own input functions instead of me defining them)
 		void (*key_press_callback_func)(sf::Event::KeyEvent);
 		void (*key_release_callback_func)(sf::Event::KeyEvent);

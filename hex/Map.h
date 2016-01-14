@@ -22,6 +22,12 @@ namespace mandr {
 		const HexMapOrientation orientation;
 		const sf::Vector2f size;
 		const sf::Vector2f origin;
+
+		/**
+		* HexMapOrientation orientation: The orientation (horizontal, vertical) of the hexagon map
+		* sf::Vector2f size: The size of an individual hex
+		* sf::Vector2f origin: The pixel coordinate of 0,0
+		*/
 		HexMapLayout(HexMapOrientation orientation, sf::Vector2f size, sf::Vector2f origin) :
 			orientation(orientation), size(size), origin(origin) {}
 	};

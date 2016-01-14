@@ -34,7 +34,7 @@ namespace mandr {
 
 	Application::Application() :
 		m_pWindow(new sf::RenderWindow(sf::VideoMode(1600, 900), "Hex Test", sf::Style::Close)),
-		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(24, 24), sf::Vector2f(64, 64)))
+		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(24, 24), sf::Vector2f(0, 0)))
 	{
 		m_pMap = new HexMap(m_MapLayout, 5, 5);
 
@@ -88,7 +88,18 @@ namespace mandr {
 	}
 
 	void Application::mouseMoved(sf::Event::MouseMoveEvent mouse) {
-		Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), sf::Vector2i(mouse.x, mouse.y));
+		// Control the map move speed
+		float dragSpeed = 0.25f;
+
+		// Get the amount we've dragged
+		sf::Vector2i mouseDragOffset = m_pInput->getMouseDraggedOffset();
+		m_pRenderer->getView().move(mouseDragOffset.x * dragSpeed, mouseDragOffset.y * dragSpeed);
+
+		// Convert mouse pixel position to world coords
+		sf::Vector2f worldPos = m_pWindow->mapPixelToCoords(sf::Mouse::getPosition(*m_pWindow));
+
+		// Use new world coords for selecting a tile we're hovering over
+		Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), sf::Vector2i(worldPos.x, worldPos.y));
 		Tile* pTile = m_pMap->getTile(hover);
 		if (pTile)
 			std::cout << pTile->getX() << " " << pTile->getY() << std::endl;
