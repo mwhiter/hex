@@ -56,7 +56,7 @@ namespace mandr {
 			for (int dy = std::max(-range, -dx - range); dy <= std::min(range, -dx + range); dy++) {
 				int dz = -dx - dy;
 				Tile* pTile = getTile(hex + Hex(dx, dy, dz));
-				if (pTile != NULL) {
+				if (pTile != nullptr) {
 					result.push_back(pTile);
 				}
 			}
@@ -76,7 +76,7 @@ namespace mandr {
 	Tile* HexMap::getTile(Hex& h) const {
 		std::unordered_map<Hex, Tile*>::const_iterator it = m_Grid.find(h);
 
-		if (it == m_Grid.end()) return NULL;
+		if (it == m_Grid.end()) return nullptr;
 		else return it->second;
 	}
 	const HexMapLayout HexMap::getLayout() const

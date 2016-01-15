@@ -20,6 +20,8 @@ namespace mandr {
 		
 		InputHandler* m_pInput;
 		Renderer* m_pRenderer;
+		
+		Tile* m_pSelectedTile;
 
 		Application();
 		Application(const Application& other);
@@ -33,6 +35,9 @@ namespace mandr {
 		void loop();
 
 		void draw(sf::RenderWindow& window);
+
+		void setSelectedTile(Tile* pTile);
+		Tile* getSelectedTile() const;
 
 		void keyPressed(sf::Event::KeyEvent key);
 		void keyReleased(sf::Event::KeyEvent key);

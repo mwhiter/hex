@@ -33,12 +33,13 @@ void draw_wrapper(sf::RenderWindow& window) {
 namespace mandr {
 
 	// Static declaration of class to ensure it exists
-	Application* Application::m_pInstance = NULL;
+	Application* Application::m_pInstance = nullptr;
 
 
 	Application::Application() :
 		m_pWindow(new sf::RenderWindow(sf::VideoMode(1600, 900), "Hex Test", sf::Style::Close)),
-		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(24, 24), sf::Vector2f(0, 0)))
+		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(24, 24), sf::Vector2f(0, 0))),
+		m_pSelectedTile(nullptr)
 	{
 		m_pMap = new HexMap(m_MapLayout, 120, 80);
 
@@ -107,16 +108,30 @@ namespace mandr {
 	}
 
 	void Application::mousePressed(sf::Event::MouseButtonEvent button) {
-		// Convert mouse pixel position to world coords
-		sf::Vector2f worldPos = m_pWindow->mapPixelToCoords(sf::Mouse::getPosition(*m_pWindow));
-		// Use new world coords for selecting a tile we're hovering over
-		Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), sf::Vector2i(worldPos.x, worldPos.y));
-		Tile* pTile = m_pMap->getTile(hover);
-		if (pTile)
-			std::cout << pTile->getX() << " " << pTile->getY() << std::endl;
 	}
 
 	void Application::mouseReleased(sf::Event::MouseButtonEvent button) {
+		if (m_pInput->WasMouseDragged()) return;
+		
+		// Convert mouse pixel position to world coords
+		sf::Vector2f worldPos = m_pWindow->mapPixelToCoords(sf::Mouse::getPosition(*m_pWindow));
+
+		// Use new world coords for selecting a tile we're hovering over
+		Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), sf::Vector2i(worldPos.x, worldPos.y));
+
+		// Select the tile
+		setSelectedTile(m_pMap->getTile(hover));
+		Tile* pSelected = getSelectedTile();
+		if (pSelected != nullptr)
+			std::cout << pSelected->getX() << " " << pSelected->getY() << std::endl;
+	}
+
+	void Application::setSelectedTile(Tile* pTile) {
+		m_pSelectedTile = pTile;
+	}
+	
+	Tile* Application::getSelectedTile() const {
+		return m_pSelectedTile;
 	}
 
 }

@@ -3,12 +3,15 @@
 namespace mandr {
 
 	InputHandler::InputHandler() :
-		key_press_callback_func(NULL),
-		key_release_callback_func(NULL),
-		mouse_moved_callback_func(NULL),
-		mouse_button_pressed_callback_func(NULL),
-		mouse_button_released_callback_func(NULL),
-		m_MouseBeingDragged(false)
+		key_press_callback_func(nullptr),
+		key_release_callback_func(nullptr),
+		mouse_moved_callback_func(nullptr),
+		mouse_button_pressed_callback_func(nullptr),
+		mouse_button_released_callback_func(nullptr),
+		m_Dragged(nullptr),
+		m_WasDragged(false),
+		m_MouseStartDrag(),
+		m_MouseEndDrag()
 	{
 	}
 
@@ -36,38 +39,41 @@ namespace mandr {
 	}
 
 	void InputHandler::processEvents(sf::Window& window) {
+		reset();
+
 		sf::Event event;
 		while (window.pollEvent(event)) {
 			switch (event.type) {
 				case sf::Event::KeyPressed:
-					if (key_press_callback_func != NULL)
+					if (key_press_callback_func != nullptr)
 						key_press_callback_func(event.key);
 					break;
 				case sf::Event::KeyReleased:
-					if (key_release_callback_func != NULL)
+					if (key_release_callback_func != nullptr)
 						key_release_callback_func(event.key);
 					break;
 				case sf::Event::MouseMoved:
-					m_MouseBeingDragged = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
 					m_NewMousePosition.x = event.mouseMove.x;
 					m_NewMousePosition.y = event.mouseMove.y;
 
-					if (mouse_moved_callback_func != NULL)
+					if (mouse_moved_callback_func != nullptr)
 						mouse_moved_callback_func(event.mouseMove);
 
 					m_LastMousePosition.x = event.mouseMove.x;
 					m_LastMousePosition.y = event.mouseMove.y;
 					break;
 				case sf::Event::MouseWheelScrolled:
-					if (mouse_wheel_scroll_callback_func != NULL)
+					if (mouse_wheel_scroll_callback_func != nullptr)
 						mouse_wheel_scroll_callback_func(event.mouseWheelScroll);
 					break;
 				case sf::Event::MouseButtonPressed:
-					if (mouse_button_pressed_callback_func != NULL)
+					if (mouse_button_pressed_callback_func != nullptr)
 						mouse_button_pressed_callback_func(event.mouseButton);
+					StartDrag(event.mouseButton);
 					break;
 				case sf::Event::MouseButtonReleased:
-					if (mouse_button_released_callback_func != NULL)
+					StopDrag(event.mouseButton);
+					if (mouse_button_released_callback_func != nullptr)
 						mouse_button_released_callback_func(event.mouseButton);
 					break;
 				case sf::Event::Closed:
@@ -75,6 +81,23 @@ namespace mandr {
 					break;
 			}
 		}
+	}
+
+	void InputHandler::reset() {
+		m_WasDragged = false;
+	}
+
+	void InputHandler::StartDrag(sf::Event::MouseButtonEvent& mouse) {
+		m_Dragged = &mouse.button;
+		m_MouseStartDrag.x = mouse.x;
+		m_MouseStartDrag.y = mouse.y;
+	}
+	
+	void InputHandler::StopDrag(sf::Event::MouseButtonEvent& mouse) {
+		m_Dragged = nullptr;
+		m_MouseEndDrag.x = mouse.x;
+		m_MouseEndDrag.y = mouse.y;
+		m_WasDragged = (m_MouseStartDrag != m_MouseEndDrag);
 	}
 
 	void InputHandler::setKeyPressedCallbackFunc(void(*callback)(sf::Event::KeyEvent)) {
@@ -108,8 +131,17 @@ namespace mandr {
 		return sf::Vector2i(m_NewMousePosition.x - m_LastMousePosition.x, m_NewMousePosition.y - m_LastMousePosition.y);
 	}
 
+	sf::Mouse::Button * InputHandler::getMouseDraggedButton() const
+	{
+		return m_Dragged;
+	}
+
 	bool InputHandler::IsMouseBeingDragged() const {
-		return m_MouseBeingDragged;
+		return m_Dragged != nullptr;
+	}
+
+	bool InputHandler::WasMouseDragged() const {
+		return m_WasDragged;
 	}
 
 }
