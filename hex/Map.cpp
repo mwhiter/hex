@@ -20,7 +20,9 @@ namespace mandr {
 			for (int q = -r_offset; q < width - r_offset; q++) {
 				Hex hex(q, r, -q-r);
 				sf::Vector2i even_r = Hex::cube_to_even_r(hex);
-				m_Grid.insert(std::pair<Hex, Tile*>(hex, new Tile(even_r.x, even_r.y)));
+				
+				Tile* pTile = new Tile(even_r.x, even_r.y);
+				m_Grid.insert(std::pair<Hex, Tile*>(hex, pTile));
 
 				// Load graphical information for hex
 				sf::Vertex* hex_verts = &m_Vertices[(even_r.x + even_r.y * m_Width) * 12];

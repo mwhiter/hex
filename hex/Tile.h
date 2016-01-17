@@ -14,8 +14,11 @@ namespace mandr {
 		int getY() const;
 
 		Hex getHex() const;
+		sf::Texture getTexture() const;
 	private:
 		int m_X, m_Y;	// even_r coordinates on hex grid
+
+		sf::Texture m_Texture;
 	};
 
 }

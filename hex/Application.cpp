@@ -38,7 +38,7 @@ namespace mandr {
 
 	Application::Application() :
 		m_pWindow(new sf::RenderWindow(sf::VideoMode(1600, 900), "Hex Test", sf::Style::Close)),
-		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(24, 24), sf::Vector2f(0, 0))),
+		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(512, 512), sf::Vector2f(0, 0))),
 		m_pSelectedTile(nullptr)
 	{
 		m_pMap = new HexMap(m_MapLayout, 120, 80);
@@ -95,11 +95,12 @@ namespace mandr {
 
 	void Application::mouseMoved(sf::Event::MouseMoveEvent mouse) {
 		// Control the map move speed
-		float dragSpeed = 0.75f;
+		float dragSpeed = 10.0f;	// this would be a programmer constant
+		float dragMod = 2.0f;		// this would be a user setting (from 0.5f - 2.0f)
 
 		// Get the amount we've dragged
 		sf::Vector2i mouseDragOffset = m_pInput->getMouseDraggedOffset();
-		m_pRenderer->getView().move(-mouseDragOffset.x * dragSpeed, -mouseDragOffset.y * dragSpeed);
+		m_pRenderer->getView().move(-mouseDragOffset.x * dragSpeed * dragMod, -mouseDragOffset.y * dragSpeed * dragMod);
 	}
 
 	void Application::mouseWheelScrolled(sf::Event::MouseWheelScrollEvent mouseScroll) {
