@@ -42,8 +42,11 @@ namespace mandr {
 		HexMap(const HexMapLayout& layout, int width, int height);
 		~HexMap();
 
+		void load();
+
 		inline int getWidth() const { return m_Width; }
 		inline int getHeight() const { return m_Height; }
+
 
 		std::vector<Tile*> getTilesInRange(Hex& hex, int range) const;
 

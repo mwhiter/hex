@@ -14,14 +14,21 @@ namespace mandr {
 	HexMap::HexMap(const HexMapLayout& layout, int width, int height) :
 		m_Layout(layout), m_Width(width), m_Height(height), m_Vertices(sf::PrimitiveType::Lines, width * height * 12)
 	{
+	}
+
+	HexMap::~HexMap()
+	{
+	}
+
+	void HexMap::load() {
 		// Initialize the hex map with axial coordinates in even-r
-		for (int r = 0; r < height; r++) {
-			int r_offset = (int) floor((r+1)/2);
-			for (int q = -r_offset; q < width - r_offset; q++) {
-				Hex hex(q, r, -q-r);
+		for (int r = 0; r < m_Height; r++) {
+			int r_offset = (int)floor((r + 1) / 2);
+			for (int q = -r_offset; q < m_Width - r_offset; q++) {
+				Hex hex(q, r, -q - r);
 				sf::Vector2i even_r = Hex::cube_to_even_r(hex);
-				
-				Tile* pTile = new Tile(even_r.x, even_r.y);
+
+				Tile* pTile = new Tile(this, even_r.x, even_r.y);
 				m_Grid.insert(std::pair<Hex, Tile*>(hex, pTile));
 
 				// Load graphical information for hex
@@ -40,12 +47,12 @@ namespace mandr {
 				hex_verts[9].position = corners[5];
 				hex_verts[10].position = corners[5];
 				hex_verts[11].position = corners[0];
+
+				for (int i = 0; i < 6; i++) {
+					std::cout << corners[i].x << " " << corners[i].y << std::endl;
+				}
 			}
 		}
-	}
-
-	HexMap::~HexMap()
-	{
 	}
 
 	std::vector<Tile*> HexMap::getTilesInRange(Hex& hex, int range) const {
@@ -68,6 +75,10 @@ namespace mandr {
 	}
 
 	void HexMap::draw(sf::RenderWindow& window) const {
+		for (std::unordered_map<Hex, Tile*>::const_iterator it = m_Grid.begin(); it != m_Grid.end(); it++) {
+			it->second->draw(window);
+		}
+
 		window.draw(m_Vertices);
 	}
 

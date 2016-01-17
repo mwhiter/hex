@@ -32,6 +32,9 @@ namespace mandr {
 		~Application();
 		static Application* getInstance();
 
+		sf::Texture m_TileTextures[1];
+
+		void init();
 		void loop();
 
 		void draw(sf::RenderWindow& window);

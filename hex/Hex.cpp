@@ -14,7 +14,7 @@ namespace mandr {
 
 	Hex Hex::even_r_to_cube(const sf::Vector2i& v)
 	{
-		return Hex(v.x - (v.y + (v.x & 1)) / 2, v.y);
+		return Hex(v.x - (v.y + (v.y & 1)) / 2, v.y);
 	}
 
 	sf::Vector2i Hex::cube_to_even_r(const Hex & a) {

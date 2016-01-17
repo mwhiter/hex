@@ -35,13 +35,15 @@ namespace mandr {
 	// Static declaration of class to ensure it exists
 	Application* Application::m_pInstance = nullptr;
 
-
 	Application::Application() :
 		m_pWindow(new sf::RenderWindow(sf::VideoMode(1600, 900), "Hex Test", sf::Style::Close)),
 		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(512, 512), sf::Vector2f(0, 0))),
 		m_pSelectedTile(nullptr)
 	{
-		m_pMap = new HexMap(m_MapLayout, 120, 80);
+		// Load textures
+		m_TileTextures[0].loadFromFile("grass512.png");
+
+		m_pMap = new HexMap(m_MapLayout, 3, 3);
 
 		m_pRenderer = new Renderer();
 		m_pRenderer->SetRenderCallbackFunc(draw_wrapper);
@@ -61,13 +63,17 @@ namespace mandr {
 		delete m_pInput;
 	}
 
+	void Application::init() {
+		m_pMap->load();
+	}
+
 	Application::Application(const Application& other) : m_pInput(other.m_pInput), m_pWindow(other.m_pWindow), m_MapLayout(other.m_MapLayout), m_pMap(other.m_pMap) {
 	}
 
 	Application* Application::getInstance()
 	{
 		// Set up application if it doesn't exist already
-		if (!m_pInstance) {
+		if (m_pInstance == nullptr) {
 			m_pInstance = new Application();
 		}
 
