@@ -59,13 +59,13 @@ namespace mandr {
 		return sf::Vector2f((float) x + layout.origin.x, (float) y + layout.origin.y);
 	}
 
-	Hex Hex::pixel_to_hex(const HexMapLayout & layout, sf::Vector2i & p)
+	Hex Hex::pixel_to_hex(const HexMapLayout & layout, sf::Vector2f & p)
 	{
 		const HexMapOrientation& o = layout.orientation;
 		sf::Vector2f pt = sf::Vector2f((p.x - layout.origin.x) / layout.size.x,
 									   (p.y - layout.origin.y) / layout.size.y);
-		double q = o.b0 * pt.x + o.b1 * pt.y;
-		double r = o.b2 * pt.x + o.b3 * pt.y;
+		float q = o.b0 * pt.x + o.b1 * pt.y;
+		float r = o.b2 * pt.x + o.b3 * pt.y;
 		return round(q, r, -q - r);
 	}
 
@@ -145,7 +145,7 @@ namespace mandr {
 	sf::Vector2f Hex::corner_offset(const HexMapLayout& layout, int corner) const {
 		sf::Vector2f size = layout.size;
 		double angle = 2.0 * M_PI * (corner + layout.orientation.start_angle) / 6;
-		return sf::Vector2f(size.x * cos(angle), size.y * sin(angle));
+		return sf::Vector2f(size.x * (float) cos(angle), size.y * (float) sin(angle));
 	}
 
 	std::vector<sf::Vector2f> Hex::polygon_corners(const HexMapLayout& layout) const {

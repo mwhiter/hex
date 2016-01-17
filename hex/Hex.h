@@ -50,7 +50,7 @@ namespace mandr {
 		void draw(const HexMapLayout& layout, sf::RenderWindow& window) const;
 
 		static sf::Vector2f hex_to_pixel(const Hex& h, const HexMapLayout& layout);
-		static Hex pixel_to_hex(const HexMapLayout& layout, sf::Vector2i& p);
+		static Hex pixel_to_hex(const HexMapLayout& layout, sf::Vector2f& p);
 
 		sf::Vector2f corner_offset(const HexMapLayout& layout, int corner) const;
 		std::vector<sf::Vector2f> polygon_corners(const HexMapLayout& layout) const;

@@ -117,7 +117,7 @@ namespace mandr {
 		sf::Vector2f worldPos = m_pWindow->mapPixelToCoords(sf::Mouse::getPosition(*m_pWindow));
 
 		// Use new world coords for selecting a tile we're hovering over
-		Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), sf::Vector2i(worldPos.x, worldPos.y));
+		Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), worldPos);
 
 		// Select the tile
 		setSelectedTile(m_pMap->getTile(hover));

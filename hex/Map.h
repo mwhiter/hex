@@ -6,13 +6,13 @@
 
 namespace mandr {
 	struct HexMapOrientation {
-		const double f0, f1, f2, f3;	// 2x2 forward matrix
-		const double b0, b1, b2, b3;	// 2x2 inverse matrix
-		const double start_angle;
+		const float f0, f1, f2, f3;	// 2x2 forward matrix
+		const float b0, b1, b2, b3;	// 2x2 inverse matrix
+		const float start_angle;
 
-		HexMapOrientation(double f0, double f1, double f2, double f3,
-			double b0, double b1, double b2, double b3,
-			double start_angle) :
+		HexMapOrientation(float f0, float f1, float f2, float f3,
+			float b0, float b1, float b2, float b3,
+			float start_angle) :
 			f0(f0), f1(f1), f2(f2), f3(f3),
 			b0(b0), b1(b1), b2(b2), b3(b3),
 			start_angle(start_angle) {}

@@ -2,21 +2,21 @@
 #include <iostream>
 namespace mandr {
 	const HexMapOrientation HexMap::Orientation_Horizontal
-		= HexMapOrientation(sqrt(3.0), sqrt(3.0) / 2.0, 0.0, 3.0 / 2.0,
-			sqrt(3.0) / 3.0, -1.0 / 3.0, 0.0, 2.0 / 3.0, 
-			0.5);
+		= HexMapOrientation(sqrt(3.0f), sqrt(3.0f) / 2.0f, 0.0f, 3.0f / 2.0f,
+			sqrt(3.0f) / 3.0f, -1.0f / 3.0f, 0.0f, 2.0f / 3.0f,
+			0.5f);
 
 	const HexMapOrientation HexMap::Orientation_Vertical
-		= HexMapOrientation(3.0 / 2.0, 0.0, sqrt(3.0) / 2.0, sqrt(3.0),
-			2.0 / 3.0, 0.0, -1.0 /3.0, sqrt(3.0) / 3.0,
-			0.0);
+		= HexMapOrientation(3.0f / 2.0f, 0.0f, sqrt(3.0f) / 2.0f, sqrt(3.0f),
+			2.0f / 3.0f, 0.0f, -1.0f /3.0f, sqrt(3.0f) / 3.0f,
+			0.0f);
 
 	HexMap::HexMap(const HexMapLayout& layout, int width, int height) :
 		m_Layout(layout), m_Width(width), m_Height(height), m_Vertices(sf::PrimitiveType::Lines, width * height * 12)
 	{
 		// Initialize the hex map with axial coordinates in even-r
 		for (int r = 0; r < height; r++) {
-			int r_offset = floor((r+1)/2);
+			int r_offset = (int) floor((r+1)/2);
 			for (int q = -r_offset; q < width - r_offset; q++) {
 				Hex hex(q, r, -q-r);
 				sf::Vector2i even_r = Hex::cube_to_even_r(hex);
