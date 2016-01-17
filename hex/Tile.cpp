@@ -34,4 +34,9 @@ namespace mandr {
 	sf::Texture Tile::getTexture() const {
 		return m_Texture;
 	}
+
+	std::ostream & operator<<(std::ostream & os, const Tile & tile) {
+		os << "[" << tile.m_X << "," << tile.m_Y << "]";
+		return os;
+	}
 }

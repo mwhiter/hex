@@ -7,6 +7,8 @@ namespace mandr {
 	class Tile
 	{
 	public:
+		friend std::ostream& operator<<(std::ostream& os, const Tile& tile);
+
 		Tile(HexMap* pMap, int x, int y);
 		~Tile();
 

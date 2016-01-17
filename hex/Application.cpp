@@ -130,7 +130,7 @@ namespace mandr {
 		setSelectedTile(m_pMap->getTile(hover));
 		Tile* pSelected = getSelectedTile();
 		if (pSelected != nullptr)
-			std::cout << pSelected->getX() << " " << pSelected->getY() << std::endl;
+			std::cout << *pSelected << std::endl;
 	}
 
 	void Application::setSelectedTile(Tile* pTile) {
