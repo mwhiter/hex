@@ -43,7 +43,7 @@ namespace mandr {
 		// Load textures
 		m_TileTextures[0].loadFromFile("grass512.png");
 
-		m_pMap = new HexMap(m_MapLayout, 3, 3);
+		m_pMap = new HexMap(m_MapLayout, 32, 32);
 
 		m_pRenderer = new Renderer();
 		m_pRenderer->SetRenderCallbackFunc(draw_wrapper);

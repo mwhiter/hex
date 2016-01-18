@@ -4,13 +4,15 @@
 
 namespace mandr {
 
-	Tile::Tile(HexMap* pMap, int x, int y) : m_X(x), m_Y(y), m_Shape(pMap->getLayout().size.x, 6) {
+	Tile::Tile(HexMap* pMap, int x, int y) : m_X(x), m_Y(y) {
 		Hex h = getHex();
 		HexMapLayout l = pMap->getLayout();
 		sf::Vector2f center = Hex::hex_to_pixel(h, l);
 
-		m_Shape.setFillColor(sf::Color::Green);
-		m_Shape.setPosition(center - l.size);
+		m_Texture = Application::getInstance()->m_TileTextures[0];
+		//m_Sprite.scale(sf::Vector2f(2.0f,2.0f));
+		m_Sprite.setTexture(m_Texture);
+		m_Sprite.setPosition(center - l.size);
 	}
 
 	Tile::~Tile() { }
@@ -24,7 +26,7 @@ namespace mandr {
 	}
 
 	void Tile::draw(sf::RenderWindow& window) const {
-		window.draw(m_Shape);
+		window.draw(m_Sprite);
 	}
 
 	Hex Tile::getHex() const {

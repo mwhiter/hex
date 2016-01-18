@@ -2,7 +2,7 @@
 
 namespace mandr {
 
-	Renderer::Renderer() : m_View(sf::View(sf::Vector2f(0,0), sf::Vector2f(1600, 900))) {
+	Renderer::Renderer() : m_View(sf::View(sf::Vector2f(0,0), sf::Vector2f(512 * 16, 512 * 9))) {
 	}
 
 

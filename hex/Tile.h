@@ -23,7 +23,7 @@ namespace mandr {
 		HexMap* pMap;
 
 		sf::Texture m_Texture;
-		sf::CircleShape m_Shape;
+		sf::Sprite m_Sprite;
 	};
 
 }

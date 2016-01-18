@@ -47,10 +47,6 @@ namespace mandr {
 				hex_verts[9].position = corners[5];
 				hex_verts[10].position = corners[5];
 				hex_verts[11].position = corners[0];
-
-				for (int i = 0; i < 6; i++) {
-					std::cout << corners[i].x << " " << corners[i].y << std::endl;
-				}
 			}
 		}
 	}
