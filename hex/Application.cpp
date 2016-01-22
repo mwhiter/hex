@@ -73,8 +73,8 @@ namespace mandr {
 	// Load textures
 	bool Application::loadTextures() {
 		bool success = true;
-		success = success && m_TileTextures[0].loadFromFile("textures/grass512.png");
-		success = success && m_TileTextures[1].loadFromFile("textures/plains512.png");
+		success = success && m_Textures[0].loadFromFile("textures/grass512.png");
+		success = success && m_Textures[1].loadFromFile("textures/plains512.png");
 		return success;
 	}
 

@@ -9,6 +9,9 @@ namespace mandr {
 	// A instance of the application
 	// Singleton class, because one should only ever exist
 
+#define MAX_TEXTURES 100
+#define MAX_FONTS 40
+
 	class Application
 	{
 	private:
@@ -32,8 +35,8 @@ namespace mandr {
 		~Application();
 		static Application* getInstance();
 
-		sf::Texture m_TileTextures[2];
-		sf::Font m_Fonts[1];
+		sf::Texture m_Textures[MAX_TEXTURES];
+		sf::Font m_Fonts[MAX_FONTS];
 
 		void init();
 		void loop();

@@ -7,7 +7,7 @@ namespace mandr {
 		HexMapLayout l = m_pMap->getLayout();
 		sf::Vector2f center = Hex::hex_to_pixel(h, l);
 
-		m_Texture = Application::getInstance()->m_TileTextures[type];
+		m_Texture = Application::getInstance()->m_Textures[type];
 		//m_Sprite.scale(sf::Vector2f(2.0f,2.0f));
 		m_Sprite.setTexture(m_Texture);
 		m_Sprite.setPosition(center - l.size);
