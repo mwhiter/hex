@@ -2,6 +2,7 @@
 
 #define _USE_MATH_DEFINES
 #include <iostream>
+#include <sstream>
 #include <cmath>
 #include <math.h>
 #include <assert.h>

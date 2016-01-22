@@ -36,27 +36,10 @@ namespace mandr {
 	Application* Application::m_pInstance = nullptr;
 
 	Application::Application() :
-		m_pWindow(new sf::RenderWindow(sf::VideoMode(1600, 900), "Hex Test", sf::Style::Close)),
 		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(512, 512), sf::Vector2f(0, 0))),
 		m_pSelectedTile(nullptr),
 		m_Zoom(0)
 	{
-		// Load textures
-		m_TileTextures[0].loadFromFile("grass512.png");
-		m_TileTextures[1].loadFromFile("plains512.png");
-
-		m_pMap = new HexMap(m_MapLayout, 16, 16);
-
-		m_pRenderer = new Renderer();
-		m_pRenderer->SetRenderCallbackFunc(draw_wrapper);
-
-		m_pInput = new InputHandler();
-		m_pInput->setKeyPressedCallbackFunc(key_pressed_wrapper);
-		m_pInput->setKeyReleasedCallbackFunc(key_released_wrapper);
-		m_pInput->setMouseMovedCallbackFunc(mouse_moved_wrapper);
-		m_pInput->setMouseWheelScrollCallbackFunc(mouse_wheel_scroll_wrapper);
-		m_pInput->setMouseButtonPressedCallbackFunc(mouse_pressed_wrapper);
-		m_pInput->setMouseButtonReleasedCallbackFunc(mouse_released_wrapper);
 	}
 
 
@@ -67,6 +50,42 @@ namespace mandr {
 	}
 
 	void Application::init() {
+		m_pWindow = new sf::RenderWindow(sf::VideoMode(1600, 900), "Hex Test", sf::Style::Close);
+		
+		m_pRenderer = new Renderer();
+		m_pRenderer->SetRenderCallbackFunc(draw_wrapper);
+
+		m_pInput = new InputHandler();
+		m_pInput->setKeyPressedCallbackFunc(key_pressed_wrapper);
+		m_pInput->setKeyReleasedCallbackFunc(key_released_wrapper);
+		m_pInput->setMouseMovedCallbackFunc(mouse_moved_wrapper);
+		m_pInput->setMouseWheelScrollCallbackFunc(mouse_wheel_scroll_wrapper);
+		m_pInput->setMouseButtonPressedCallbackFunc(mouse_pressed_wrapper);
+		m_pInput->setMouseButtonReleasedCallbackFunc(mouse_released_wrapper);
+		
+		assert(loadTextures());
+		assert(loadFonts());
+		loadMap();
+
+		loop();
+	}
+
+	// Load textures
+	bool Application::loadTextures() {
+		bool success = true;
+		success = success && m_TileTextures[0].loadFromFile("textures/grass512.png");
+		success = success && m_TileTextures[1].loadFromFile("textures/plains512.png");
+		return success;
+	}
+
+	bool Application::loadFonts() {
+		bool success = true;
+		success = success && m_Fonts[0].loadFromFile("fonts/arial.ttf");
+		return success;
+	}
+
+	void Application::loadMap() {
+		m_pMap = new HexMap(m_MapLayout, 16, 16);
 		m_pMap->load();
 	}
 
@@ -115,7 +134,7 @@ namespace mandr {
 	void Application::mouseWheelScrolled(sf::Event::MouseWheelScrollEvent mouseScroll) {
 		bool changeZoom = mouseScroll.delta > 0 ? (m_Zoom < 5) : (m_Zoom > -10);
 		if (changeZoom) {
-			m_Zoom += mouseScroll.delta;
+			m_Zoom += mouseScroll.delta > 0 ? 1 : -1;
 			sf::View* view = &m_pRenderer->getView();
 			view->zoom(mouseScroll.delta > 0 ? 0.9f : 1.1f);
 		}

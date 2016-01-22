@@ -32,7 +32,8 @@ namespace mandr {
 		~Application();
 		static Application* getInstance();
 
-		sf::Texture m_TileTextures[1];
+		sf::Texture m_TileTextures[2];
+		sf::Font m_Fonts[1];
 
 		void init();
 		void loop();
@@ -52,6 +53,10 @@ namespace mandr {
 		inline Renderer* getRenderer() const {
 			return m_pRenderer;
 		}
+	private:
+		bool loadFonts();
+		bool loadTextures();
+		void loadMap();
 	};
 
 #define GAME (*Application::getInstance())
