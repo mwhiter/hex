@@ -1,13 +1,11 @@
 #pragma once
 
-#include <iostream>
 #include "Map.h"
 #include "InputHandler.h"
 #include "Renderer.h"
 #include <SFML/Graphics.hpp>
 
 namespace mandr {
-
 	// A instance of the application
 	// Singleton class, because one should only ever exist
 
@@ -26,6 +24,8 @@ namespace mandr {
 		Application();
 		Application(const Application& other);
 		Application& operator=(const Application& other) {};
+
+		int m_Zoom;
 
 		static Application* m_pInstance;
 	public:
@@ -48,6 +48,11 @@ namespace mandr {
 		void mouseWheelScrolled(sf::Event::MouseWheelScrollEvent mouseScroll);
 		void mousePressed(sf::Event::MouseButtonEvent mouseButton);
 		void mouseReleased(sf::Event::MouseButtonEvent mouseButton);
+
+		inline Renderer* getRenderer() const {
+			return m_pRenderer;
+		}
 	};
 
+#define GAME (*Application::getInstance())
 }

@@ -1,4 +1,4 @@
-#include "Application.h"
+#include "PCH.h"
 
 // Global wrappers to singleton Application functions
 
@@ -38,12 +38,14 @@ namespace mandr {
 	Application::Application() :
 		m_pWindow(new sf::RenderWindow(sf::VideoMode(1600, 900), "Hex Test", sf::Style::Close)),
 		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(512, 512), sf::Vector2f(0, 0))),
-		m_pSelectedTile(nullptr)
+		m_pSelectedTile(nullptr),
+		m_Zoom(0)
 	{
 		// Load textures
 		m_TileTextures[0].loadFromFile("grass512.png");
+		m_TileTextures[1].loadFromFile("plains512.png");
 
-		m_pMap = new HexMap(m_MapLayout, 32, 32);
+		m_pMap = new HexMap(m_MapLayout, 16, 16);
 
 		m_pRenderer = new Renderer();
 		m_pRenderer->SetRenderCallbackFunc(draw_wrapper);
@@ -61,6 +63,7 @@ namespace mandr {
 	Application::~Application() {
 		delete m_pWindow;
 		delete m_pInput;
+		delete m_pRenderer;
 	}
 
 	void Application::init() {
@@ -110,8 +113,12 @@ namespace mandr {
 	}
 
 	void Application::mouseWheelScrolled(sf::Event::MouseWheelScrollEvent mouseScroll) {
-		sf::View* view = &m_pRenderer->getView();
-		view->zoom(mouseScroll.delta > 0 ? 0.9f : 1.1f);
+		bool changeZoom = mouseScroll.delta > 0 ? (m_Zoom < 5) : (m_Zoom > -10);
+		if (changeZoom) {
+			m_Zoom += mouseScroll.delta;
+			sf::View* view = &m_pRenderer->getView();
+			view->zoom(mouseScroll.delta > 0 ? 0.9f : 1.1f);
+		}
 	}
 
 	void Application::mousePressed(sf::Event::MouseButtonEvent button) {

@@ -1,21 +1,23 @@
-#include "Tile.h"
-#include <iostream>
-#include "Application.h"
+#include "PCH.h"
 
 namespace mandr {
 
-	Tile::Tile(HexMap* pMap, int x, int y) : m_X(x), m_Y(y) {
+	Tile::Tile(HexMap* pMap, TerrainType type, int x, int y) : m_pMap(pMap), m_X(x), m_Y(y) {
 		Hex h = getHex();
-		HexMapLayout l = pMap->getLayout();
+		HexMapLayout l = m_pMap->getLayout();
 		sf::Vector2f center = Hex::hex_to_pixel(h, l);
 
-		m_Texture = Application::getInstance()->m_TileTextures[0];
+		m_Texture = Application::getInstance()->m_TileTextures[type];
 		//m_Sprite.scale(sf::Vector2f(2.0f,2.0f));
 		m_Sprite.setTexture(m_Texture);
 		m_Sprite.setPosition(center - l.size);
 	}
 
 	Tile::~Tile() { }
+
+	TerrainType Tile::getTerrain() const {
+		return m_Terrain;
+	}
 
 	int Tile::getX() const {
 		return m_X;

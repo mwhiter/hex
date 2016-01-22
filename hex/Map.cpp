@@ -1,6 +1,27 @@
-#include "Map.h"
-#include <iostream>
+#include "PCH.h"
+
 namespace mandr {
+
+	// Test map of terrains
+	int map[16][16] = {
+		{ 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+		{ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }
+	};
+
 	const HexMapOrientation HexMap::Orientation_Horizontal
 		= HexMapOrientation(sqrt(3.0f), sqrt(3.0f) / 2.0f, 0.0f, 3.0f / 2.0f,
 			sqrt(3.0f) / 3.0f, -1.0f / 3.0f, 0.0f, 2.0f / 3.0f,
@@ -28,7 +49,7 @@ namespace mandr {
 				Hex hex(q, r, -q - r);
 				sf::Vector2i even_r = Hex::cube_to_even_r(hex);
 
-				Tile* pTile = new Tile(this, even_r.x, even_r.y);
+				Tile* pTile = new Tile(this, (TerrainType) map[even_r.y][even_r.x], even_r.x, even_r.y);
 				m_Grid.insert(std::pair<Hex, Tile*>(hex, pTile));
 
 				// Load graphical information for hex
@@ -72,7 +93,12 @@ namespace mandr {
 
 	void HexMap::draw(sf::RenderWindow& window) const {
 		for (std::unordered_map<Hex, Tile*>::const_iterator it = m_Grid.begin(); it != m_Grid.end(); it++) {
-			it->second->draw(window);
+			const Tile* pTile = it->second;
+
+			sf::FloatRect screenBounds = GAME.getRenderer()->getWindowScreenWorldBounds(window, 1.5f);
+			if (screenBounds.contains(Hex::hex_to_pixel(it->first, m_Layout))) {
+				pTile->draw(window);
+			}
 		}
 
 		window.draw(m_Vertices);
