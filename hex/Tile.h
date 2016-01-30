@@ -26,8 +26,10 @@ namespace mandr {
 
 		HexMap* m_pMap;
 
+		sf::Texture m_SelectTexture;
 		sf::Texture m_Texture;
 		sf::Sprite m_Sprite;
+		sf::Sprite m_SelectSprite;
 	};
 
 }

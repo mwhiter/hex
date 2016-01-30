@@ -75,6 +75,7 @@ namespace mandr {
 		bool success = true;
 		success = success && m_Textures[0].loadFromFile("textures/grass512.png");
 		success = success && m_Textures[1].loadFromFile("textures/plains512.png");
+		success = success && m_Textures[2].loadFromFile("textures/ui_hexselect.png");
 		return success;
 	}
 

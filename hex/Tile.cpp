@@ -7,10 +7,18 @@ namespace mandr {
 		HexMapLayout l = m_pMap->getLayout();
 		sf::Vector2f center = Hex::hex_to_pixel(h, l);
 
+		// Don't load textures this way. Should have some sort of tile type XML / SQL definition (that includes a texture ref). Right now hard coded (just dumb)
 		m_Texture = Application::getInstance()->m_Textures[type];
+		// hard-coded, use some ui graphics definition
+		m_SelectTexture = Application::getInstance()->m_Textures[2];
+
 		//m_Sprite.scale(sf::Vector2f(2.0f,2.0f));
+
 		m_Sprite.setTexture(m_Texture);
 		m_Sprite.setPosition(center - l.size);
+
+		m_SelectSprite.setTexture(m_SelectTexture);
+		m_SelectSprite.setPosition(center - l.size);
 	}
 
 	Tile::~Tile() { }
@@ -29,6 +37,10 @@ namespace mandr {
 
 	void Tile::draw(sf::RenderWindow& window) const {
 		window.draw(m_Sprite);
+
+		// draw select sprite overlay if selected tile
+		if (this == GAME.getSelectedTile())
+			window.draw(m_SelectSprite);
 	}
 
 	Hex Tile::getHex() const {
