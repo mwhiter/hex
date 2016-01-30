@@ -30,3 +30,4 @@
 *.VC.opendb
 *.sdf
 res/
+bin/

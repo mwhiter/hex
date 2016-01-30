@@ -30,6 +30,8 @@ namespace mandr {
 
 		int m_Zoom;
 
+		bool m_DraggedEnoughForMovement;
+
 		static Application* m_pInstance;
 	public:
 		~Application();

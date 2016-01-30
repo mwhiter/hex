@@ -38,7 +38,8 @@ namespace mandr {
 	Application::Application() :
 		m_MapLayout(HexMapLayout(HexMap::Orientation_Horizontal, sf::Vector2f(512, 512), sf::Vector2f(0, 0))),
 		m_pSelectedTile(nullptr),
-		m_Zoom(0)
+		m_Zoom(0),
+		m_DraggedEnoughForMovement(false)
 	{
 	}
 
@@ -123,13 +124,20 @@ namespace mandr {
 	}
 
 	void Application::mouseMoved(sf::Event::MouseMoveEvent mouse) {
+		// We need to drag a certain amount before we have dragged enough for movement (once we have, keep dragging until mouse is released)
+		float mouseDragTotal = m_pInput->getMouseDraggedTotalDistance();
+		if (!m_DraggedEnoughForMovement && abs(mouseDragTotal) > 16.0f)
+			m_DraggedEnoughForMovement = true;
+		
 		// Control the map move speed
 		float dragSpeed = 10.0f;	// this would be a programmer constant
 		float dragMod = 2.0f;		// this would be a user setting (from 0.5f - 2.0f)
-
-		// Get the amount we've dragged
-		sf::Vector2i mouseDragOffset = m_pInput->getMouseDraggedOffset();
-		m_pRenderer->getView().move(-mouseDragOffset.x * dragSpeed * dragMod, -mouseDragOffset.y * dragSpeed * dragMod);
+		
+									// Start dragging - get amount we've dragged this frame
+		if (m_DraggedEnoughForMovement) {
+			sf::Vector2i mouseDragOffset = m_pInput->getMouseDraggedOffset();
+			m_pRenderer->getView().move(-mouseDragOffset.x * dragSpeed * dragMod, -mouseDragOffset.y * dragSpeed * dragMod);
+		}
 	}
 
 	void Application::mouseWheelScrolled(sf::Event::MouseWheelScrollEvent mouseScroll) {
@@ -145,19 +153,20 @@ namespace mandr {
 	}
 
 	void Application::mouseReleased(sf::Event::MouseButtonEvent button) {
-		if (m_pInput->WasMouseDragged()) return;
-		
-		// Convert mouse pixel position to world coords
-		sf::Vector2f worldPos = m_pWindow->mapPixelToCoords(sf::Mouse::getPosition(*m_pWindow));
+		if (m_pInput->WasMouseDragged()) {
+			m_DraggedEnoughForMovement = false;
+		}
+		else {
+			// Convert mouse pixel position to world coords
+			sf::Vector2f worldPos = m_pWindow->mapPixelToCoords(sf::Mouse::getPosition(*m_pWindow));
 
-		// Use new world coords for selecting a tile we're hovering over
-		Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), worldPos);
+			// Use new world coords for selecting a tile we're hovering over
+			Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), worldPos);
 
-		// Select the tile
-		setSelectedTile(m_pMap->getTile(hover));
-		Tile* pSelected = getSelectedTile();
-		if (pSelected != nullptr)
-			std::cout << pSelected->getX() << " " << pSelected->getY() << std::endl;
+
+			// Select the tile
+			setSelectedTile(m_pMap->getTile(hover));
+		}
 	}
 
 	void Application::setSelectedTile(Tile* pTile) {

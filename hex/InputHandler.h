@@ -24,6 +24,11 @@ namespace mandr {
 		void setMouseButtonPressedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent));
 		void setMouseButtonReleasedCallbackFunc(void(*callback)(sf::Event::MouseButtonEvent));
 
+		/* Returns the distance between the mouse start and stop
+		@return: float The distance from the start of the mouse drag to the stop
+		**/
+		float getMouseDraggedTotalDistance() const;
+
 		/* Returns the difference between the last mouse position and the new mouse position if the mouse is being dragged
 		@return: sf::Vector2i The offset vector of the new position from the old position
 		**/
