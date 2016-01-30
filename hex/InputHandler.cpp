@@ -124,7 +124,7 @@ namespace mandr {
 		mouse_button_released_callback_func = callback;
 	}
 
-	float InputHandler::getMouseDraggedTotalDistance() const {
+	double InputHandler::getMouseDraggedTotalDistance() const {
 		if (!IsMouseBeingDragged())
 			return 0.0f;
 		return sqrt(pow(m_MouseStartDrag.x - m_NewMousePosition.x, 2) + pow(m_MouseStartDrag.y - m_NewMousePosition.y, 2));

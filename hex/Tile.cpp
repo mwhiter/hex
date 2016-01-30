@@ -2,15 +2,15 @@
 
 namespace mandr {
 
-	Tile::Tile(HexMap* pMap, TerrainType type, int x, int y) : m_pMap(pMap), m_X(x), m_Y(y) {
+	Tile::Tile(HexMap* pMap, TerrainInfo terrain, int x, int y) : m_pMap(pMap), m_X(x), m_Y(y) {
 		Hex h = getHex();
 		HexMapLayout l = m_pMap->getLayout();
 		sf::Vector2f center = Hex::hex_to_pixel(h, l);
 
 		// Don't load textures this way. Should have some sort of tile type XML / SQL definition (that includes a texture ref). Right now hard coded (just dumb)
-		m_Texture = Application::getInstance()->m_Textures[type];
+		m_Texture = terrain.getTexture();
 		// hard-coded, use some ui graphics definition
-		m_SelectTexture = Application::getInstance()->m_Textures[2];
+		m_SelectTexture = Application::getInstance()->getTexture(2);
 
 		//m_Sprite.scale(sf::Vector2f(2.0f,2.0f));
 

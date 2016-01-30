@@ -16,7 +16,7 @@ namespace mandr {
 	};
 
 	enum TerrainType {
-		NO_TERRIAN_TYPE = -1,
+		NO_TERRAIN_TYPE = -1,
 
 		TERRIAN_TYPE_GRASS = 0,
 		TERRIAN_TYPE_PLAINS,

@@ -66,6 +66,10 @@ namespace mandr {
 		
 		assert(loadTextures());
 		assert(loadFonts());
+
+		m_TerrainInfos[0] = TerrainInfo("TERRAIN_GRASS", 1, 0, TERRIAN_TYPE_GRASS);
+		m_TerrainInfos[1] = TerrainInfo("TERRAIN_PLAINS", 1, 1, TERRIAN_TYPE_GRASS);
+
 		loadMap();
 
 		loop();
@@ -76,7 +80,7 @@ namespace mandr {
 		bool success = true;
 		success = success && m_Textures[0].loadFromFile("textures/grass512.png");
 		success = success && m_Textures[1].loadFromFile("textures/plains512.png");
-		success = success && m_Textures[2].loadFromFile("textures/ui_hexselect.png");
+		success = success && m_Textures[2].loadFromFile("textures/ui/ui_hex_highlight_red.png");
 		return success;
 	}
 
@@ -117,6 +121,14 @@ namespace mandr {
 		window.display();
 	}
 
+	sf::Texture Application::getTexture(int i) const {
+		return m_Textures[i];
+	}
+
+	sf::Font Application::getFont(int i) const {
+		return m_Fonts[i];
+	}
+
 	void Application::keyPressed(sf::Event::KeyEvent key) {
 	}
 
@@ -125,8 +137,8 @@ namespace mandr {
 
 	void Application::mouseMoved(sf::Event::MouseMoveEvent mouse) {
 		// We need to drag a certain amount before we have dragged enough for movement (once we have, keep dragging until mouse is released)
-		float mouseDragTotal = m_pInput->getMouseDraggedTotalDistance();
-		if (!m_DraggedEnoughForMovement && abs(mouseDragTotal) > 16.0f)
+		double mouseDragTotal = m_pInput->getMouseDraggedTotalDistance();
+		if (!m_DraggedEnoughForMovement && abs(mouseDragTotal) > 24.0)
 			m_DraggedEnoughForMovement = true;
 		
 		// Control the map move speed
@@ -164,7 +176,6 @@ namespace mandr {
 
 			// Use new world coords for selecting a tile we're hovering over
 			Hex hover = Hex::pixel_to_hex(m_pMap->getLayout(), worldPos);
-
 
 			// Select the tile
 			setSelectedTile(m_pMap->getTile(hover));

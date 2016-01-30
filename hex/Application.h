@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Map.h"
+#include "Infos.h"
 #include "InputHandler.h"
 #include "Renderer.h"
 #include <SFML/Graphics.hpp>
@@ -32,13 +33,18 @@ namespace mandr {
 
 		bool m_DraggedEnoughForMovement;
 
+		sf::Texture m_Textures[MAX_TEXTURES];
+		sf::Font m_Fonts[MAX_FONTS];
+		
 		static Application* m_pInstance;
 	public:
 		~Application();
 		static Application* getInstance();
 
-		sf::Texture m_Textures[MAX_TEXTURES];
-		sf::Font m_Fonts[MAX_FONTS];
+		sf::Texture getTexture(int i) const;
+		sf::Font getFont(int i) const;
+
+		TerrainInfo m_TerrainInfos[6];
 
 		void init();
 		void loop();

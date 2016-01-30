@@ -1,13 +1,14 @@
 #pragma once
 
 #include "Hex.h"
+#include "Infos.h"
 
 namespace mandr {
 
 	class Tile
 	{
 	public:
-		Tile(HexMap* pMap, TerrainType type, int x, int y);
+		Tile(HexMap* pMap, TerrainInfo terrain, int x, int y);
 		~Tile();
 
 		int getX() const;

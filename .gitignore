@@ -31,3 +31,4 @@
 *.sdf
 res/
 bin/
+ipch/
