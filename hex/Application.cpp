@@ -153,9 +153,11 @@ namespace mandr {
 	}
 
 	void Application::mouseReleased(sf::Event::MouseButtonEvent button) {
-		if (m_pInput->WasMouseDragged()) {
+		// If mouse was dragged, reset movement
+		if (m_DraggedEnoughForMovement && m_pInput->WasMouseDragged()) {
 			m_DraggedEnoughForMovement = false;
 		}
+		// If mouse was not dragged, select a tile
 		else {
 			// Convert mouse pixel position to world coords
 			sf::Vector2f worldPos = m_pWindow->mapPixelToCoords(sf::Mouse::getPosition(*m_pWindow));
