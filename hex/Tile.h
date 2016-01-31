@@ -8,7 +8,7 @@ namespace mandr {
 	class Tile
 	{
 	public:
-		Tile(HexMap* pMap, TerrainInfo terrain, int x, int y);
+		Tile(HexMap* pMap, TerrainInfo* pTerrain, int x, int y);
 		~Tile();
 
 		int getX() const;
@@ -16,19 +16,18 @@ namespace mandr {
 
 		void draw(sf::RenderWindow& window) const;
 
-		TerrainType getTerrain() const;
+		TerrainInfo* getTerrain() const;
+
+		void changeTerrain(TerrainInfo* pNewTerrain);
 
 		Hex getHex() const;
-		sf::Texture getTexture() const;
 	private:
 		int m_X, m_Y;	// even_r coordinates on hex grid
 
-		TerrainType m_Terrain;
-
 		HexMap* m_pMap;
+		TerrainInfo* m_pTerrainInfo;
+		sf::Texture* m_pSelectTexture;
 
-		sf::Texture m_SelectTexture;
-		sf::Texture m_Texture;
 		sf::Sprite m_Sprite;
 		sf::Sprite m_SelectSprite;
 	};

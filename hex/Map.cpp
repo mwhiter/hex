@@ -49,8 +49,8 @@ namespace mandr {
 				Hex hex(q, r, -q - r);
 				sf::Vector2i even_r = Hex::cube_to_even_r(hex);
 
-				TerrainInfo& terrainInfo = GAME.m_TerrainInfos[map[even_r.y][even_r.x]];
-				Tile* pTile = new Tile(this, terrainInfo, even_r.x, even_r.y);
+				TerrainInfo* pTerrainInfo = &GAME.m_TerrainInfos[map[even_r.y][even_r.x]];
+				Tile* pTile = new Tile(this, pTerrainInfo, even_r.x, even_r.y);
 				m_Grid.insert(std::pair<Hex, Tile*>(hex, pTile));
 
 				// Load graphical information for hex

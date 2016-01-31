@@ -26,7 +26,7 @@ namespace mandr {
 	TerrainInfo::TerrainInfo() :
 		Infos(""),
 		m_MovementCost(0),
-		m_Texture(),
+		m_pTexture(),
 		m_TerrainType(NO_TERRAIN_TYPE)
 	{
 	}
@@ -34,7 +34,7 @@ namespace mandr {
 	TerrainInfo::TerrainInfo(std::string type, int moveCost, int texture, TerrainType terrain) :
 		Infos(type),
 		m_MovementCost(moveCost),
-		m_Texture(GAME.getTexture(texture)),
+		m_pTexture(GAME.getTexture(texture)),
 		m_TerrainType(terrain)
 	{
 	}
@@ -43,8 +43,8 @@ namespace mandr {
 		return m_MovementCost;
 	}
 
-	sf::Texture TerrainInfo::getTexture() const {
-		return m_Texture;
+	sf::Texture* TerrainInfo::getTexture() const {
+		return m_pTexture;
 	}
 
 	TerrainType TerrainInfo::getTerrainType() const {

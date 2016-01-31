@@ -25,11 +25,11 @@ namespace mandr {
 		TerrainInfo(std::string type, int moveCost, int texture, TerrainType terrain);
 	
 		int getMovementCost() const;
-		sf::Texture getTexture() const;
+		sf::Texture* getTexture() const;
 		TerrainType getTerrainType() const;
 	private:
 		int m_MovementCost;
-		sf::Texture m_Texture;
+		sf::Texture* m_pTexture;
 		TerrainType m_TerrainType;
 	};
 

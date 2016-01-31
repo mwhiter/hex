@@ -33,7 +33,7 @@ namespace mandr {
 
 		bool m_DraggedEnoughForMovement;
 
-		sf::Texture m_Textures[MAX_TEXTURES];
+		sf::Texture* m_Textures[MAX_TEXTURES];
 		sf::Font m_Fonts[MAX_FONTS];
 		
 		static Application* m_pInstance;
@@ -41,7 +41,7 @@ namespace mandr {
 		~Application();
 		static Application* getInstance();
 
-		sf::Texture getTexture(int i) const;
+		sf::Texture* getTexture(int i) const;
 		sf::Font getFont(int i) const;
 
 		TerrainInfo m_TerrainInfos[6];

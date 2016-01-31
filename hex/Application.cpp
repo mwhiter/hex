@@ -77,16 +77,20 @@ namespace mandr {
 
 	// Load textures
 	bool Application::loadTextures() {
+		m_Textures[0] = new sf::Texture();
+		m_Textures[1] = new sf::Texture();
+		m_Textures[2] = new sf::Texture();
+		
 		bool success = true;
-		success = success && m_Textures[0].loadFromFile("textures/grass512.png");
-		success = success && m_Textures[1].loadFromFile("textures/plains512.png");
-		success = success && m_Textures[2].loadFromFile("textures/ui/ui_hex_highlight_red.png");
+		success &= m_Textures[0]->loadFromFile("textures/grass512.png");
+		success &= m_Textures[1]->loadFromFile("textures/plains512.png");
+		success &= m_Textures[2]->loadFromFile("textures/ui/ui_hex_highlight_red.png");
 		return success;
 	}
 
 	bool Application::loadFonts() {
 		bool success = true;
-		success = success && m_Fonts[0].loadFromFile("fonts/arial.ttf");
+		success &= m_Fonts[0].loadFromFile("fonts/arial.ttf");
 		return success;
 	}
 
@@ -121,7 +125,7 @@ namespace mandr {
 		window.display();
 	}
 
-	sf::Texture Application::getTexture(int i) const {
+	sf::Texture* Application::getTexture(int i) const {
 		return m_Textures[i];
 	}
 

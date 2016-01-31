@@ -2,29 +2,27 @@
 
 namespace mandr {
 
-	Tile::Tile(HexMap* pMap, TerrainInfo terrain, int x, int y) : m_pMap(pMap), m_X(x), m_Y(y) {
+	Tile::Tile(HexMap* pMap, TerrainInfo* terrain, int x, int y) : m_pMap(pMap), m_pTerrainInfo(terrain), m_X(x), m_Y(y) {
 		Hex h = getHex();
 		HexMapLayout l = m_pMap->getLayout();
 		sf::Vector2f center = Hex::hex_to_pixel(h, l);
 
-		// Don't load textures this way. Should have some sort of tile type XML / SQL definition (that includes a texture ref). Right now hard coded (just dumb)
-		m_Texture = terrain.getTexture();
 		// hard-coded, use some ui graphics definition
-		m_SelectTexture = Application::getInstance()->getTexture(2);
+		m_pSelectTexture = Application::getInstance()->getTexture(2);
 
 		//m_Sprite.scale(sf::Vector2f(2.0f,2.0f));
 
-		m_Sprite.setTexture(m_Texture);
+		m_Sprite.setTexture(*m_pTerrainInfo->getTexture());
 		m_Sprite.setPosition(center - l.size);
 
-		m_SelectSprite.setTexture(m_SelectTexture);
+		m_SelectSprite.setTexture(*m_pSelectTexture);
 		m_SelectSprite.setPosition(center - l.size);
 	}
 
 	Tile::~Tile() { }
 
-	TerrainType Tile::getTerrain() const {
-		return m_Terrain;
+	TerrainInfo* Tile::getTerrain() const {
+		return m_pTerrainInfo;
 	}
 
 	int Tile::getX() const {
@@ -33,6 +31,12 @@ namespace mandr {
 
 	int Tile::getY() const {
 		return m_Y;
+	}
+	
+	void Tile::changeTerrain(TerrainInfo* pNewTerrain) {
+		assert(pNewTerrain != NULL);
+		assert(pNewTerrain->getTexture() != NULL);
+		m_SelectSprite.setTexture(*pNewTerrain->getTexture());
 	}
 
 	void Tile::draw(sf::RenderWindow& window) const {
@@ -45,9 +49,5 @@ namespace mandr {
 
 	Hex Tile::getHex() const {
 		return Hex::even_r_to_cube(sf::Vector2i(m_X, m_Y));
-	}
-
-	sf::Texture Tile::getTexture() const {
-		return m_Texture;
 	}
 }
